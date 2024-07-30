@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16.3
+    container_name: postgres
+    environment:
+      POSTGRES_DB: messages
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_BROKER_ID: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  app:
+    build: .
+    container_name: my-app
+    depends_on:
+      - db
+      - kafka
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: messages
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      CONFIG_PATH: /local.yaml
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
