@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16.3
-    container_name: postgres
+    container_name: db
     environment:
       POSTGRES_DB: messages
       POSTGRES_USER: postgres
@@ -32,7 +32,7 @@ services:
 
   app:
     build: .
-    container_name: my-app
+    container_name: app
     depends_on:
       - db
       - kafka
