@@ -30,12 +30,12 @@ COPY --from=builder /app/migrator .
 
 # Копируем конфигурационные файлы
 COPY config/local.yaml .
-COPY wait-for-postgres.sh .
+COPY wait-for-postgres_and_kafka.sh .
 
 # Копируем миграции
 COPY migrations ./migrations
 
-RUN chmod +x ./wait-for-postgres.sh
+RUN chmod +x ./wait-for-postgres_and_kafka.sh
 
 EXPOSE 8080
-ENTRYPOINT ["./wait-for-postgres.sh", "db", "./messaggio"]
+ENTRYPOINT ["./wait-for-postgres_and_kafka.sh", "db", "./messaggio"]
