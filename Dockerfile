@@ -17,10 +17,11 @@ RUN  go build -o /app/messaggio ./cmd/messageSrv
 RUN  go build -o /app/migrator ./cmd/migrator
 
 # Создаем финальный образ для запуска нашего приложения
-FROM golang:1.22
+# Используем базовый образ Ubuntu для финального этапа
+FROM ubuntu:22.04
 
-RUN apt-get update
-RUN apt-get -y install postgresql
+# Обновляем списки пакетов и устанавливаем PostgreSQL и необходимые утилиты
+RUN apt-get update && apt-get -y install postgresql-client
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
