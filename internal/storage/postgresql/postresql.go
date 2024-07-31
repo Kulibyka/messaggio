@@ -45,25 +45,33 @@ func (s *Storage) SaveMessage(content string) (int64, error) {
 }
 
 func (s *Storage) GetMessages() ([]models.Message, error) {
-	const op = "storage.postgresql.SaveMessage"
+	const op = "storage.postgresql.GetMessages"
 
 	rows, err := s.db.Query("SELECT id, content, created_at FROM messages")
 	if err != nil {
 		return []models.Message{}, fmt.Errorf("%s: %w", op, err)
 	}
 
-	defer rows.Close()
+	defer func() {
+		if cerr := rows.Close(); cerr != nil && err == nil {
+			err = fmt.Errorf("%s: %w", op, cerr)
+		}
+	}()
 
 	var messages []models.Message
 	for rows.Next() {
 		var msg models.Message
 		if err := rows.Scan(&msg.ID, &msg.Content, &msg.CreatedAt); err != nil {
-			return []models.Message{}, fmt.Errorf("%s: %w", op, err)
+			return nil, fmt.Errorf("%s: %w", op, err)
 		}
 		messages = append(messages, msg)
 	}
 
-	return messages, nil
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return messages, err
 }
 
 func (s *Storage) GetProcessedMessagesCount() (int64, error) {
