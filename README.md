@@ -68,9 +68,3 @@
 - **HTTP API:** `http://your-server-address:8080/messages` для отправки сообщений и `http://your-server-address:8080/stats` для получения статистики.
 - **PostgreSQL:** Доступен на порту `5432`, подключайтесь с помощью пользователя `postgres` и пароля `password`.
 - **Kafka:** Брокер доступен на порту `9092`, Zookeeper на `2181`.
-
-## Ссылки
-
-- [Ссылка на развернутый проект](http://your-deployed-project-url)
-- [Git репозиторий с кодом](https://github.com/yourusername/messagio)
-```
