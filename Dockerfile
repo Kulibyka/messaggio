@@ -20,7 +20,7 @@ RUN  go build -o /app/migrator ./cmd/migrator
 FROM golang:1.22
 
 RUN apt-get update
-RUN apt-get -y install postgresql-client
+RUN apt-get -y install postgresql
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
