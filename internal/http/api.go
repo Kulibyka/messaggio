@@ -76,7 +76,7 @@ func getStatisticsHandler(db *postgresql.Storage) http.HandlerFunc {
 			return
 		}
 
-		response := map[string]int64{"processed_messages_count": count}
+		response := map[string]int64{"processed_message_count": count}
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
